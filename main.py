@@ -36,7 +36,7 @@ def main():
                         help='模型架构配置文件路径')
                         
     # 3. 训练超参数配置文件
-    parser.add_argument('--hyp', type=str, default='ultralytics/ultralytics/cfg/default.yaml', 
+    parser.add_argument('--hyp', type=str, default='ultralytics/cfg/default.yaml', 
                         help='训练超参数配置文件路径 (现在使用内置配置，支持自定义增强)')
                         
     # 4. 预训练权重文件
