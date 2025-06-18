@@ -120,6 +120,11 @@ copy_paste_mode: "flip" # (str) the method to do copy_paste augmentation (flip, 
 auto_augment: randaugment # (str) auto augmentation policy for classification (randaugment, autoaugment, augmix)
 erasing: 0.4 # (float) probability of random erasing during classification training (0-0.9), 0 means no erasing, must be less than 1.0.
 
+# Custom Augmentation for Crack Detection ----------------------------------------------------------------------------
+custom_augment: 0.5 # (float) custom augmentation probability (0.0=off, 1.0=always), specialized for crack detection
+custom_intensity: 0.4 # (float) custom augmentation intensity (0.0-1.0), controls edge enhancement strength
+custom_sigma: 5 # (int) custom augmentation smoothing coefficient (1-10), for advanced histogram equalization
+
 # Custom config.yaml ---------------------------------------------------------------------------------------------------
 cfg: # (str, optional) for overriding defaults.yaml
 

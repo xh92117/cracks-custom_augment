@@ -2845,7 +2845,11 @@ def v8_transforms(dataset, imgsz, hyp, stretch=False):
             MixUp(dataset, pre_transform=pre_transform, p=hyp.mixup),
             CutMix(dataset, pre_transform=pre_transform, p=hyp.cutmix),
             Albumentations(p=1.0),
-            CustomAugment(p=getattr(hyp, 'custom_augment', 0.5)),  # 添加自定义增强
+            CustomAugment(
+                p=getattr(hyp, 'custom_augment', 0.5),
+                intensity=getattr(hyp, 'custom_intensity', 0.4),
+                sigma=getattr(hyp, 'custom_sigma', 5)
+            ),  # 添加自定义增强
             RandomHSV(hgain=hyp.hsv_h, sgain=hyp.hsv_s, vgain=hyp.hsv_v),
             RandomFlip(direction="vertical", p=hyp.flipud),
             RandomFlip(direction="horizontal", p=hyp.fliplr, flip_idx=flip_idx),

@@ -62,24 +62,115 @@ names: ['crack']                # 类别名称
 ```
 
 ### 3. 训练模型
-```bash
-# 使用默认配置训练
-python main.py
 
-# 指定自定义配置
-python main.py --config cfg/default.yaml --data data/crack_dataset.yaml
+#### 基本训练命令
+```bash
+# 基本训练（使用默认自定义增强设置）
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml
 
 # 使用预训练权重
-python main.py --weights models/yolo11n.pt --data data/crack_dataset.yaml
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml --weights yolo11n.pt
+```
+
+#### 控制自定义增强
+```bash
+# 禁用自定义增强
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml --disable-custom-augment
+
+# 设置高强度自定义增强
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml \
+    --custom-augment 0.8 --custom-intensity 0.7 --custom-sigma 8
+
+# 设置轻度自定义增强
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml \
+    --custom-augment 0.3 --custom-intensity 0.2 --custom-sigma 3
+
+# 只修改增强概率，其他参数使用默认值
+python main.py --data data/crack_dataset.yaml --model yolo11n.yaml --custom-augment 0.6
 ```
 
 ### 4. 配置参数
-在 `cfg/default.yaml` 中可以调整以下自定义增强参数：
+自定义增强参数已完全集成到ultralytics框架中。在 `ultralytics/ultralytics/cfg/default.yaml` 中可以调整以下参数：
 ```yaml
-# 自定义增强参数 (专用于裂缝检测)
-custom_augment: 0.5      # 自定义增强应用概率
-custom_intensity: 0.4    # 自定义增强强度
-custom_sigma: 5          # 自定义增强平滑系数
+# 自定义增强参数 (已集成到框架默认配置中)
+custom_augment: 0.5      # 自定义增强应用概率 (0.0=禁用, 1.0=总是应用)
+custom_intensity: 0.4    # 自定义增强强度 (0.0-1.0)
+custom_sigma: 5          # 自定义增强平滑系数 (1-10)
+```
+
+### 5. 控制自定义增强
+
+#### 方法1: 直接修改框架配置
+编辑 `ultralytics/ultralytics/cfg/default.yaml` 文件中的参数。
+
+#### 方法2: 程序化控制
+```python
+from ultralytics import YOLO
+import yaml
+
+# 加载并修改配置
+with open('ultralytics/ultralytics/cfg/default.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+# 禁用自定义增强
+config['custom_augment'] = 0.0
+
+# 或启用高强度增强
+config['custom_augment'] = 0.8
+config['custom_intensity'] = 0.7
+config['custom_sigma'] = 8
+
+# 训练
+model = YOLO('yolo11n.yaml')
+model.train(data='your_data.yaml', **config)
+```
+
+#### 方法3: 命令行参数控制（推荐）
+main.py 现在支持直接通过命令行参数控制自定义增强：
+```bash
+# 禁用自定义增强
+python main.py --data dataset.yaml --model yolo11n.yaml --disable-custom-augment
+
+# 自定义增强参数
+python main.py --data dataset.yaml --model yolo11n.yaml \
+    --custom-augment 0.8 --custom-intensity 0.6 --custom-sigma 7
+```
+
+#### 方法4: 测试脚本
+运行 `python test_main_augment_control.py` 查看详细使用示例。
+
+### 6. 命令行参数说明
+
+main.py 支持以下命令行参数：
+
+#### 必需参数
+- `--data`: 数据集配置文件路径
+- `--model`: 模型架构配置文件路径
+
+#### 可选参数
+- `--hyp`: 训练超参数配置文件路径（默认使用内置配置）
+- `--weights`: 预训练权重路径（默认: yolo11n.pt）
+
+#### 自定义增强控制参数
+- `--disable-custom-augment`: 禁用自定义增强算法
+- `--custom-augment FLOAT`: 增强概率 (0.0-1.0)
+- `--custom-intensity FLOAT`: 增强强度 (0.0-1.0)  
+- `--custom-sigma INT`: 平滑系数 (1-10)
+
+#### 参数优先级
+命令行参数 > 配置文件设置
+
+#### 示例命令
+```bash
+# 查看所有参数
+python main.py --help
+
+# 完全禁用自定义增强
+python main.py --data dataset.yaml --model yolo11n.yaml --disable-custom-augment
+
+# 精确控制增强参数
+python main.py --data dataset.yaml --model yolo11n.yaml \
+    --custom-augment 0.7 --custom-intensity 0.5 --custom-sigma 6
 ```
 
 ## 技术亮点
