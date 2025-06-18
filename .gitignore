@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# PyTorch
+*.pth
+*.pt
+
+# Training outputs
+runs/
+wandb/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (too large for git)
+datasets/
+*.jpg
+*.png
+*.jpeg
+*.mp4
+*.avi
+
+# Model weights (can be large)
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+
+# Keep config files but not weights
+!models/*.yaml
+!models/*.yml 

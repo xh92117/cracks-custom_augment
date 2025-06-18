@@ -1,0 +1,118 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# Default training settings and hyperparameters for medium-augmentation COCO training
+
+# 训练参数
+task: detect  # YOLO任务类型 (detect, segment, classify, pose, obb)
+mode: train  # YOLO模式 (train, val, predict, export, track, benchmark)
+
+# 数据增强超参数
+hsv_h: 0.015  # 图像HSV色调增强 (比例)
+hsv_s: 0.7    # 图像HSV饱和度增强 (比例)
+hsv_v: 0.4    # 图像HSV亮度增强 (比例)
+degrees: 0.0  # 图像旋转 (+/- deg)
+translate: 0.1  # 图像平移 (+/- 比例)
+scale: 0.5    # 图像缩放 (+/- 增益)
+shear: 0.0    # 图像剪切 (+/- deg)
+perspective: 0.0  # 图像透视 (+/- 比例), 范围 0-0.001
+flipud: 0.0   # 图像上下翻转 (概率)
+fliplr: 0.5   # 图像左右翻转 (概率)
+bgr: 0.0      # 图像通道BGR (概率)
+mosaic: 1.0   # 图像马赛克 (概率)
+mixup: 0.0    # 图像混合 (概率)
+cutmix: 0.0   # 图像剪切混合 (概率)
+copy_paste: 0.0  # 分割复制粘贴 (概率)
+copy_paste_mode: flip  # 复制粘贴模式 [flip, mixup]
+auto_augment: randaugment  # 自动增强策略 for classification (randaugment, autoaugment, augmix)
+erasing: 0.4  # 训练期间随机擦除概率 for classification
+crop_fraction: 1.0  # classification时的剪切比例
+
+# 自定义增强参数 (专用于裂缝检测)
+custom_augment: 0.5  # 自定义增强应用概率
+custom_intensity: 0.4  # 自定义增强强度
+custom_sigma: 5  # 自定义增强平滑系数
+
+# 训练设置
+epochs: 300   # 训练轮数
+patience: 50  # EarlyStopping耐心轮数，无改善则停止训练
+batch: 16     # 批次大小，-1为自动批次大小
+imgsz: 640    # 输入图像尺寸 (像素)
+save: True    # 保存训练检查点和预测结果
+save_period: -1  # 每x轮保存检查点 (如果 < 1 则禁用)
+cache: False  # True/ram, disk or False. 使用缓存加载数据
+device: ''    # 运行设备，例如 cuda device=0 或 device=0,1,2,3 或 device=cpu
+workers: 8    # 数据加载器工作进程数 (每个RANK if DDP)
+project: 'runs/detect'  # 项目名称
+name: 'train'  # 实验名称
+exist_ok: False  # 存在时是否覆盖项目/名称 ok, do not increment
+pretrained: True  # 是否使用预训练模型 (bool) 或模型加载路径 (str)
+optimizer: 'auto'  # 优化器选择 {auto, SGD, Adam, Adamax, AdamW, NAdam, RAdam, RMSProp}
+verbose: True  # 是否打印详细输出
+seed: 0       # 全局训练种子
+deterministic: True  # 是否启用确定性模式
+single_cls: False  # 将多类数据作为单类训练
+rect: False   # 矩形训练
+cos_lr: False  # 余弦学习率调度器
+close_mosaic: 10  # 在最后N轮禁用马赛克增强 (0为禁用)
+resume: False  # 从最后检查点恢复训练
+amp: True     # 自动混合精度 (AMP) 训练
+fraction: 1.0  # 训练数据的比例
+profile: False  # ONNX和TensorRT速度分析
+freeze: None  # 冻结层: 整数或层名列表，或冻结前n层
+
+# 验证/测试设置
+val: True     # 训练期间验证/测试
+split: val    # 用于验证的数据集分割，例如 'val', 'test' 或 'train'
+save_json: False  # 保存结果为JSON文件
+save_hybrid: False  # 保存标签的混合版本 (标签 + 额外形状)
+conf: 0.001   # 预测的对象置信度阈值
+iou: 0.7      # NMS的IoU阈值
+max_det: 300  # 每张图像的最大检测数
+half: False   # 使用FP16半精度推理
+dnn: False    # 使用OpenCV DNN进行ONNX推理
+plots: True   # 训练/验证期间保存图
+overlap_mask: True  # 训练期间掩码重叠
+mask_ratio: 4  # 掩码降采样比例
+boxes: True   # 在分割期间显示边界框
+
+# 预测设置
+source: 'ultralytics/assets'  # 推理源，例如图像、视频、目录、URL等
+vid_stride: 1  # 视频帧采样间隔
+stream_buffer: False  # 缓冲所有流帧 (True) 或返回最近帧 (False)
+visualize: False  # 可视化特征
+augment: False  # 应用图像增强进行预测
+agnostic_nms: False  # 类别无关NMS
+classes: None  # 按类别过滤结果，例如 classes=0, 或 classes=[0,2,3]
+retina_masks: False  # 使用高分辨率分割掩码
+embed: None   # 返回特征向量/嵌入而不是预测结果
+
+# 可视化设置
+show: False   # 显示预测结果
+save_frames: False  # 保存预测的各个视频帧
+save_txt: False  # 保存结果为.txt文件
+save_conf: False  # 保存置信度在--save-txt标签中
+save_crop: False  # 保存裁剪的预测框
+show_labels: True  # 在绘图中显示对象标签
+show_conf: True   # 在绘图中显示对象置信度分数
+show_boxes: True  # 在分割预测中显示边界框
+line_width: None  # 边界框线宽度，如果为None则自动调整
+
+# 导出设置
+format: torchscript  # 导出格式，例如 'onnx' 或 'engine'
+keras: False  # 使用Keras
+optimize: False  # TorchScript: 优化移动设备
+int8: False   # CoreML/TF INT8量化
+dynamic: False  # ONNX/TF/TensorRT: 动态轴
+simplify: False  # ONNX: 简化模型
+opset: None   # ONNX: opset版本 (可选，默认为最新)
+workspace: 4  # TensorRT: 工作空间大小 (GB)
+nms: False    # CoreML: 添加NMS
+
+# 超参数进化设置
+evolve: None  # 进化代数数 (可选)
+project_name: runs/evolve  # 进化项目名称
+exist_ok_evolve: False  # 进化存在ok, do not increment project
+
+# 其他设置
+cfg: None     # 可选配置文件路径覆盖默认值
+tracker: botsort.yaml  # 跟踪器类型，例如 'bytetrack.yaml'
+region: line  # 用于计数的区域类型，例如 'line' 或 'region' 
